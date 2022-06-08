@@ -61,9 +61,15 @@ struct list* delete(struct list* list, int position) {
   for (int i = 0; i < position; i++) {
     p = p->next;
   }
-  struct element* q = p->next;
-  q->prev = p->prev;
-  p->prev->next = q;
+  if (p->next != NULL && p->prev != NULL) {
+    struct element* q = p->next;
+    q->prev = p->prev;
+    p->prev->next = q;
+  } else if (p->next == NULL) {
+    list->tail = p->prev;
+  } else {
+    list->head = p->next;
+  }
   free(p);
 }
 
@@ -75,9 +81,10 @@ struct list* insert(struct list* list, int position) {
 
 void show(struct list* list) {
   struct element* p = list->head;
-  while (p->next != NULL) {
+  while (true) {
     printf("%d ", p->value);
-    p = p->next;
+    if (p->next != NULL) p = p->next;
+    else break;
   }
   printf("\n");
   return;
@@ -91,18 +98,31 @@ int main(void) {
   struct element* node = NULL;
   struct list* list = (struct list*)malloc(sizeof(struct list));
   list->n = 0;
+  int num = 0;
 
   srand((unsigned int)time(NULL));
   for (int i = 0; i < 10; i++) {
+    num = get_random(0, 9);
+    printf("%d ", num);
     if (rand() % 2 == 0) {
-      list = tail_add(list, get_random(0, 9));
+      printf("tail\n");
+      list = tail_add(list, num);
     } else {
-      list = head_add(list, get_random(0, 9));
+      printf("head\n");
+      list = head_add(list, num);
     }
     show(list);
+    printf("\n");
   }
+  show(list);
+  printf("\n");
+  /*
+  delete(list, list->n - 1);
+  show(list);
+  delete(list, 0);
   show(list);
   delete(list, 1);
   show(list);
+  */ // deleteの動作確認
   return 0;
 }
