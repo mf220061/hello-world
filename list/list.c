@@ -73,17 +73,34 @@ struct list* delete(struct list* list, int position) {
   free(p);
 }
 
-struct list* insert(struct list* list, int position) {
-  if (position >= list->n || position < 0) {
+struct list* insert(struct list* list, int position, int value) {
+  if (position > list->n || position < 0) {
     return list;
+  } else if (position == 0) {
+    return head_add(list, value);
+  } else if (position == list->n) {
+    return tail_add(list, value);
   }
+  struct element* p = list->head;
+  list->n++;
+  while (position > 1) {
+    p = p->next;
+    position--;
+  }
+  struct element* node = (struct element*)malloc(sizeof(struct element));
+  node->value = value;
+  struct element* q = p->next;
+  q->prev = node;
+  node->next = q;
+  p->next = node;
+  node->prev = p;
 }
 
 void show(struct list* list) {
   struct element* p = list->head;
   while (true) {
     printf("%d ", p->value);
-    if (p->next != NULL) p = p->next;
+    if (p != list->tail) p = p->next;
     else break;
   }
   printf("\n");
@@ -103,26 +120,27 @@ int main(void) {
   srand((unsigned int)time(NULL));
   for (int i = 0; i < 10; i++) {
     num = get_random(0, 9);
-    printf("%d ", num);
     if (rand() % 2 == 0) {
-      printf("tail\n");
       list = tail_add(list, num);
     } else {
-      printf("head\n");
       list = head_add(list, num);
     }
     show(list);
-    printf("\n");
   }
   show(list);
-  printf("\n");
-  /*
   delete(list, list->n - 1);
   show(list);
   delete(list, 0);
   show(list);
   delete(list, 1);
   show(list);
-  */ // deleteの動作確認
+  delete(list, 1);
+  show(list);
+  insert(list, list->n, 10);
+  show(list);
+  insert(list, 0, 100);
+  show(list);
+  insert(list, 1, 1000);
+  show(list);
   return 0;
 }
