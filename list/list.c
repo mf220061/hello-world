@@ -15,38 +15,48 @@ struct list {
   struct element* tail;
 };
 
-struct list* add(struct list* list, int value) {
+struct list* tail_add(struct list* lst, int value) {
   struct element* node = (struct element*)malloc(sizeof(struct element));
   node->value = value;
   node->next = NULL;
-  if (list == NULL) {
-    node->head, node->tail = true, true;
-    return node;
+  lst->n++;
+  if (lst->head == NULL) {
+    lst->head = node;
+    lst->tail = node;
+    return lst;
   } else {
-    struct element* p = list;
-    while (!p->tail) {
-      p = p->next;
-    }
+    struct element* p = lst->tail;
     p->next = node;
-    p->tail = false;
-    node->tail = true;
-    return list;
+    node->prev = p;
+    lst->tail = node;
+    return lst;
   }
 }
 
-int GetRandom(int min, int max) {
+void show(struct list* lst) {
+  struct element* p = lst->head;
+  while (p->next != NULL) {
+    printf("%d ", p->value);
+    p = p->next;
+  }
+  printf("\n");
+  return;
+}
+
+int get_random(int min, int max) {
   return min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
 }
 
 int main(void) {
   struct element* node = NULL;
-  struct list* list = NULL;
+  struct list* lst = (struct list*)malloc(sizeof(struct list));
+  lst->n = 0;
 
   srand((unsigned int)time(NULL));
   for (int i = 0; i < 10; i++) {
-    list = add(list, GetRandom(0, 9));
-    show(list);
+    lst = tail_add(lst, get_random(0, 9));
+    show(lst);
   }
-  show(list);
+  show(lst);
   return 0;
 }
