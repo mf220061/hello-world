@@ -99,6 +99,29 @@ struct list* insert(struct list* list, int position, int value) {
   return list;
 }
 
+struct list* insert_sort(struct list* list) {
+  struct list* newlist = (struct list*)malloc(sizeof(struct list));
+  int count = list->n - 1;
+  struct element* p = list->head;
+  newlist = insert(newlist, p, 0);
+  struct element* q = newlist->head;
+  for (int i = 0; i < count; i++) {
+    for (int j = 0; j < newlist->n; j++) {
+      if (p->value < q->value || q == newlist->tail) {
+        newlist = insert_element(newlist, p, j);
+        break;
+      }
+      q = q->next;
+    }
+    /*do {
+      if (p->value 
+    } while (q == newlist->tail);*/
+    q = newlist->head; 
+  }
+  free(list);
+  return newlist;
+}
+
 void show(struct list* list) {
   struct element* p = list->head;
   while (true) {
@@ -141,8 +164,6 @@ int main(void) {
   show(list);
   printf("%d\n", list->n);
   list = insert(list, list->n, 10);
-  show(list);
-  list = insert(list, list->n+1, 10);
   show(list);
   list = insert(list, 0, 100);
   show(list);
