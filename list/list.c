@@ -71,6 +71,8 @@ struct list* delete(struct list* list, int position) {
     list->head = p->next;
   }
   free(p);
+  list->n--;
+  return list;
 }
 
 struct list* insert(struct list* list, int position, int value) {
@@ -94,6 +96,7 @@ struct list* insert(struct list* list, int position, int value) {
   node->next = q;
   p->next = node;
   node->prev = p;
+  return list;
 }
 
 void show(struct list* list) {
@@ -128,19 +131,22 @@ int main(void) {
     show(list);
   }
   show(list);
-  delete(list, list->n - 1);
+  list = delete(list, list->n - 1);
   show(list);
-  delete(list, 0);
+  list = delete(list, 0);
   show(list);
-  delete(list, 1);
+  list = delete(list, 1);
   show(list);
-  delete(list, 1);
+  list = delete(list, 1);
   show(list);
-  insert(list, list->n, 10);
+  printf("%d\n", list->n);
+  list = insert(list, list->n, 10);
   show(list);
-  insert(list, 0, 100);
+  list = insert(list, list->n+1, 10);
   show(list);
-  insert(list, 1, 1000);
+  list = insert(list, 0, 100);
+  show(list);
+  list = insert(list, 1, 1000);
   show(list);
   return 0;
 }
