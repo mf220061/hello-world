@@ -99,27 +99,44 @@ struct list* insert(struct list* list, int position, int value) {
   return list;
 }
 
-struct list* insert_sort(struct list* list) {
-  struct list* newlist = (struct list*)malloc(sizeof(struct list));
-  int count = list->n - 1;
-  struct element* p = list->head;
-  newlist = insert(newlist, p, 0);
-  struct element* q = newlist->head;
-  for (int i = 0; i < count; i++) {
-    for (int j = 0; j < newlist->n; j++) {
-      if (p->value < q->value || q == newlist->tail) {
-        newlist = insert_element(newlist, p, j);
-        break;
-      }
-      q = q->next;
-    }
-    /*do {
-      if (p->value 
-    } while (q == newlist->tail);*/
-    q = newlist->head; 
+struct list* insert_element(struct list* list, int position, struct element* node) {
+  if (list->head == NULL) {
+    list->head = node;
+    list->tail = node;
+    list->n++;
+    node->next = NULL;
+    node->prev = NULL;
+    return list;
   }
-  free(list);
-  return newlist;
+  if (position > list->n || position < 0) {
+    return list;
+  }
+  struct element* p = list->head;
+  list->n++;
+  if (position == 0) {
+    p->prev = node;
+    node->next = p;
+    node->prev = NULL;
+    list->head = node;
+    return list;
+  } else if (position == list->n) {
+    p = list->tail;
+    p->next = node;
+    node->prev = p;
+    node->next = NULL;
+    list->tail = node;
+    return list;
+  }
+  while (position > 1) {
+    p = p->next;
+    position--;
+  }
+  struct element* q = p->next;
+  q->prev = node;
+  node->next = q;
+  p->next = node;
+  node->prev = p;
+  return list;
 }
 
 void show(struct list* list) {
@@ -131,6 +148,46 @@ void show(struct list* list) {
   }
   printf("\n");
   return;
+}
+
+struct list* insert_sort(struct list* list) {
+  struct list* newlist = (struct list*)malloc(sizeof(struct list));
+  int count = list->n - 1;
+  struct element* p = list->head;
+  newlist = insert_element(newlist, 0, p);
+  struct element* q = newlist->head;
+  printf("OK?\n");
+  struct element* r = p->next;
+  printf("OK?\n");
+  for (int i = 0; i < count; i++) {
+    for (int j = 0; j < newlist->n - 1; j++) {
+      if (p->value < q->value) {
+        printf("%d\n", p->value);
+        newlist = insert_element(newlist, j, p);
+        break;
+      }
+      q = q->next;
+    }
+    /*
+    if (q = newlist->tail) {
+      printf("%d\n", p->value);
+      newlist = insert_element(newlist, newlist->n, p);
+    }
+    */
+    show(newlist);
+    /*do {
+      if (p->value 
+    } while (q == newlist->tail);*/
+    printf("OK?\n");
+    q = newlist->head;
+    printf("OK?\n");
+    r = r->next;
+    printf("OK?\n");
+    p = r->prev;
+    printf("OK?\n");
+  }
+  free(list);
+  return newlist;
 }
 
 int get_random(int min, int max) {
@@ -162,12 +219,15 @@ int main(void) {
   show(list);
   list = delete(list, 1);
   show(list);
-  printf("%d\n", list->n);
+  /*
   list = insert(list, list->n, 10);
   show(list);
   list = insert(list, 0, 100);
   show(list);
   list = insert(list, 1, 1000);
+  show(list);
+  */
+  list = insert_sort(list);
   show(list);
   return 0;
 }
