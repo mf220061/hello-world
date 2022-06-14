@@ -108,7 +108,6 @@ struct list* insert_sort(struct list* oldlist) {
     }
     newp = newlist->head;
     oldp = oldlist->head;
-    show(newlist);
   }
   return newlist;
 }
@@ -121,16 +120,20 @@ int main(void) {
   list->n = 0;
   int num = 0;
 
-  srand((unsigned int)time(NULL));
-  for (int i = 0; i < 5; i++) {
-    num = get_random(0, 99);
+  //srand((unsigned int)time(NULL));
+  srand(1);
+  for (int i = 0; i < 10000; i++) {
+    num = get_random(0, 9999);
     struct element* node = (struct element*)malloc(sizeof(struct element));
     node->value = num;
     list = tail_add(list, node);
   }
   show(list);
   printf("\n");
+  clock_t start = clock();
   list = insert_sort(list);
+  clock_t end = clock();
   show(list);
+  printf("time: %.3fms\n", (double)(end - start) / 1000);
   return 0;
 }
