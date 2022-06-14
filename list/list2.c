@@ -69,27 +69,11 @@ struct list* insert(struct list* list, int position, struct element* node) {
   return list;
 }
 
-/*
- * 処理の流れとしては、新しいリストnewlistを用意して、それに要素を追加していく感じ
- * 必要な変数としては、
- *   古いリストである oldlist、
- *   新しいリストである newlist、
- *   古いリストの要素である oldp、
- *   新しいリストの要素である newp
- * が最低限必要であると考えられる。
- * 具体的な処理としては、
- *  1. oldlistから要素を一つ取り出して、newlistに加える。
- *  2. oldlistの先頭の値についてnewlistの値を先頭から順番に比較
- *  3. oldlistの先頭の値よりもnewlistの要素の値の方が大きい場合、その値の前にoldlistの先頭の値を挿入する。
- *     仮に、oldlistの先頭の値がnewlistの要素のすべての値よりも大きい場合、newlistの最後に追加する。
- *  4. oldlistの要素数が1以上場合、2と3を繰り返す
- */
 struct list* insert_sort(struct list* oldlist) {
   struct list* newlist = (struct list*)malloc(sizeof(struct list));
   struct element* oldp = oldlist->head;
   oldlist->head = oldp->next;
-  //struct element* r = p->next;
-  newlist = insert(newlist, 0, oldp); // 1.の処理
+  newlist = insert(newlist, 0, oldp);
   struct element* newp = newlist->head;
   oldlist->n--;
   while (true) {
